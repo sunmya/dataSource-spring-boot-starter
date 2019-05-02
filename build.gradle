@@ -1,0 +1,88 @@
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+apply plugin: 'java'
+apply plugin: 'maven'
+
+group 'com.github.sunmya'
+version '0.0.1-RELEASE'
+
+
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenLocal()
+    maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+    maven { url "http://repo.maven.apache.org/maven2" }
+    mavenCentral()
+}
+dependencies {
+    compile group: 'com.zaxxer', name: 'HikariCP', version: '3.4.2'
+	compile group: 'org.springframework.boot', name: 'spring-boot-configuration-processor', version: '2.2.6.RELEASE'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter', version: '2.2.6.RELEASE'
+}
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+ 
+artifacts {
+	archives jar
+    archives sourcesJar
+    archives javadocJar
+}
+
+signing {  
+    sign configurations.archives  
+} 
+uploadArchives {
+    repositories { 
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }  
+            mavenLocal()
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2") {
+                authentication(userName: "${sonatypeUsername}", password: "${sonatypePassword}")
+            }
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots") {
+                authentication(userName: "${sonatypeUsername}", password: "${sonatypePassword}")
+            }
+            pom.project {  
+                name project.name  
+                packaging 'jar'  
+                description 'A redis spring-boot stater'
+                url 'https://gitee.com/sunmya/dataSource-spring-boot-starter'  
+  
+  
+                licenses {  
+                    license {  
+                        name 'GNU General Public License v3.0'  
+                        url 'https://gitee.com/sunmya/dataSource-spring-boot-starter/blob/master/LICENSE'  
+                        distribution 'repo'  
+                    }  
+                }  
+  
+                developers {  
+                    developer {  
+                        id 'sunmya'  
+                        name 'Sun Mengya'  
+                    }  
+                }  
+            }
+            
+        }
+    }
+}
