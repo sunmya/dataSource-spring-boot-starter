@@ -5,7 +5,7 @@ apply plugin: 'java'
 apply plugin: 'maven'
 
 group 'com.github.sunmya'
-version '0.0.1-RELEASE'
+version '0.2.7-RELEASE'
 
 
 [compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
@@ -21,8 +21,8 @@ repositories {
 }
 dependencies {
     compile group: 'com.zaxxer', name: 'HikariCP', version: '3.4.2'
-	compile group: 'org.springframework.boot', name: 'spring-boot-configuration-processor', version: '2.2.6.RELEASE'
-	compile group: 'org.springframework.boot', name: 'spring-boot-starter', version: '2.2.6.RELEASE'
+	compile group: 'org.springframework.boot', name: 'spring-boot-configuration-processor', version: '2.2.7.RELEASE'
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter', version: '2.2.7.RELEASE'
 }
 
 tasks.withType(JavaCompile) {
@@ -66,6 +66,11 @@ uploadArchives {
                 description 'A redis spring-boot stater'
                 url 'https://gitee.com/sunmya/dataSource-spring-boot-starter'  
   
+                scm {  
+                    url 'scm:git@gitee.com:sunmya/dataSource-spring-boot-starter.git'  
+                    connection 'scm:git@gitee.com:sunmya/dataSource-spring-boot-starter.git'  
+                    developerConnection 'git@gitee.com:sunmya/dataSource-spring-boot-starter.git'  
+                }  
   
                 licenses {  
                     license {  
